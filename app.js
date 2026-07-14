@@ -8,8 +8,9 @@ fi:{email:"Sähköposti",password:"Salasana",login:"Kirjaudu",forgot:"Unohdin sa
 const COLORS=["","green","red","blue","purple","yellow","gray"],app=document.getElementById("app");
 const S={lang:localStorage.getItem("the_set_lang")||"es",session:null,profile:null,tab:"dashboard",restaurants:[],employees:[],er:[],ur:[],shifts:[],profiles:[],rid:"",period:monday(new Date()),error:"",message:"",drag:null,reset:location.pathname.includes("reset-password")};
 function t(){return D[S.lang]||D.es}function esc(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
-function monday(d){d=new Date(d);const day=d.getDay(),diff=day===0?-6:1-day;d.setDate(d.getDate()+diff);return d.toISOString().slice(0,10)}
-function add(ds,n){const d=new Date(ds+"T00:00:00");d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+function localDate(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");return `${y}-${m}-${day}`}
+function monday(d){d=new Date(d);const day=d.getDay(),diff=day===0?-6:1-day;d.setDate(d.getDate()+diff);return localDate(d)}
+function add(ds,n){const[y,m,day]=ds.split("-").map(Number),d=new Date(y,m-1,day);d.setDate(d.getDate()+n);return localDate(d)}
 function fmt(ds){return new Date(ds+"T00:00:00").toLocaleDateString("en-GB")}
 function hours(st,en,code){const c=String(code||"").toLowerCase().trim();if(["s","vl"].includes(c))return 7.5;if(["v","vp","vv"].includes(c))return 0;if(!st||!en)return 0;let[sh,sm]=st.split(":").map(Number),[eh,em]=en.split(":").map(Number);if([sh,sm,eh,em].some(Number.isNaN))return 0;let a=sh*60+sm,b=eh*60+em;if(b<a)b+=1440;return Math.round((b-a)/60*100)/100}
 function dates(){return Array.from({length:21},(_,i)=>({date:add(S.period,i),week:Math.floor(i/7)+1}))}
